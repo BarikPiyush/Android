@@ -5,21 +5,22 @@
     android:layout_height="70dp"
     android:layout_margin="5dp"
     android:layout_gravity="center"
-    app:cardCornerRadius="80dp">
+    app:cardCornerRadius="8dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
         <ImageView
+            android:id="@+id/idIVCategory"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/idIVCategory"
             android:src="@color/yellow"
             android:scaleType="centerCrop" />
         <TextView
+            android:id="@+id/idTVCategory"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_centerInParent="true"
             android:text="category"
@@ -27,7 +28,7 @@
             android:textAlignment="center"
             android:padding="3dp"
             android:textStyle="bold"
-            android:id="@id/idIVCategory" />
+             />
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
