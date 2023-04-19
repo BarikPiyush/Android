@@ -58,3 +58,46 @@ public class MainActivity extends AppCompatActivity implements CategoryRVAdapter
         categoryRVModalArrayList.add(new CategoryRVModal("Health","https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8SGVhbHRofGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"));
         categoryRVAdapter.notifyDataSetChanged();
      }
+    private void getNews(String category){
+        loadingPB.setVisibility(View.VISIBLE);
+        articlesArrayList.clear();
+        String categoryURL = "https://newsapi.org/v2/top-headlines?country=in&category="+category+"&apiKey=7dd2e2d106c84a32afb2a3fd041d0cd5";
+        String url = "https://newsapi.org/v2/top-headlines? country=in&excludeDomains=stackoverflow.com&sortBy=publishedAt&language=en&apiKey=7dd2e2d106c84a32afb2a3fd041d0cd5";
+        String BASE_URL = "https://newsapi.org/";
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+        Call<NewsModal> call;
+        if(category.equals("All")){
+            call = retrofitAPI.getAllNews(url);
+        }else {
+            call = retrofitAPI.getNewsByCategory(categoryURL);
+        }
+        call.enqueue(new Callback<NewsModal>() {
+            @Override
+            public void onResponse(Call<NewsModal> call, Response<NewsModal> response) {
+                NewsModal newsModal = response.body();
+                loadingPB.setVisibility(View.GONE);
+                ArrayList<Articles> articles = newsModal.getArticles();
+                for(int i=0; i<articles.size(); i++){
+                    articlesArrayList.add(new Articles(articles.get(i).getTitle(),articles.get(i).getDescription(),articles.get(i).getUrlToImage()
+                            articles.get(i).getUrl(), articles.get(i).getContent()));
+                }
+                newsRVAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<NewsModal> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Fail to get news", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        @Override
+        public void onCategoryClick(int position)
+        {
+            String category = categoryRVModalArrayList.get(position).getCategory();
+            getNews(category);
+        }
+    }
